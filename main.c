@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node {
-    struct Node* next;
-    char data;
-} Node;
-
 typedef struct {
     Node* head;
     unsigned int size;
 } MyList;
+
+typedef struct Node {
+    struct Node* next;
+    char data;
+} Node;
 
 int PushStack(MyList* stack, char data)
 {
@@ -65,61 +65,6 @@ void releaseList(MyList* list)
     free(list);
 }
 
-char fillBracket(char brackets) {
-    switch (brackets) {
-    case ')':
-        return '(';
-    case ']':
-        return '[';
-    case '}':
-        return '{';
-    }
-    return '\0';
-}
-
-int brackBalance(char* line)
-{
-    char x, fillBrackets;
-    MyList* bracketsStack = (MyList*)malloc(sizeof(MyList));
-
-    for (int i = 0; (x = line[i]) != '\0'; i++) {
-        switch (x) {
-        case '(':
-        case '[':
-        case '{':
-            if (!PushStack(bracketsStack, x))
-                return 0;
-            break;
-        case ')':
-        case ']':
-        case '}':
-            fillBrackets = Pop(bracketsStack);
-            if (fillBrackets != '\0' && fillBrackets == fillBracket(x))
-                continue;
-            else
-                return 0;
-        }
-    }
-    if (bracketsStack->size != 0)
-        return 0;
-    releaseList(bracketsStack);
-    return 1;
-}
-
-void printedList(MyList* list)
-{
-    int listSize = list->size;
-    Node* current = list->head;
-
-    while (listSize > 0) {
-        printf("[%c]", current->data);
-        listSize--;
-        if (listSize > 0)
-            current = current->next;
-    }
-    printf("\n");
-}
-
 int copyLinkList(MyList* main, MyList* dat)
 {
     int datListSize = dat->size;
@@ -169,12 +114,67 @@ int listSorted(MyList* list)
     return 1;
 }
 
+void printedList(MyList* list)
+{
+    int listSize = list->size;
+    Node* current = list->head;
+
+    while (listSize > 0) {
+        printf("[%c]", current->data);
+        listSize--;
+        if (listSize > 0)
+            current = current->next;
+    }
+    printf("\n");
+}
+
+char fillBracket(char brackets) {
+    switch (brackets) {
+    case ')':
+        return '(';
+    case ']':
+        return '[';
+    case '}':
+        return '{';
+    }
+    return '\0';
+}
+
+int brackBalance(char* line)
+{
+    char x, fillBrackets;
+    MyList* bracketsStack = (MyList*)malloc(sizeof(MyList));
+
+    for (int i = 0; (x = line[i]) != '\0'; i++) {
+        switch (x) {
+        case '(':
+        case '[':
+        case '{':
+            if (!PushStack(bracketsStack, x))
+                return 0;
+            break;
+        case ')':
+        case ']':
+        case '}':
+            fillBrackets = Pop(bracketsStack);
+            if (fillBrackets != '\0' && fillBrackets == fillBracket(x))
+                continue;
+            else
+                return 0;
+        }
+    }
+    if (bracketsStack->size != 0)
+        return 0;
+    releaseList(bracketsStack);
+    return 1;
+}
+
+
+
 int main()
 {
     char* myBrackets[] = {"()", "([])()", "{}()", "([{}])", ")(", "())({)", "(", "]})", "([(])", "(2+(2*))", "[2/{5*(4+7)}]", NULL};
-
     printf("Balance of brackets:\n");
-
     for (int i = 0; myBrackets[i] != NULL; i++) {
         printf("\t brackets are %s balanced!\n", myBrackets[i],
             brackBalance(myBrackets[i]) ? "\b" : "not");
@@ -184,7 +184,6 @@ int main()
     MyList* copyList = (MyList*)malloc(sizeof(MyList));
 
     printf("\n Copy of list:\n");
-
     initList(Mylist);
     PushStack(Mylist, 'o');
     PushStack(Mylist, 'd');
